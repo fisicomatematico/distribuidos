@@ -80,51 +80,5 @@ public static void configureConnect(String dataDialect, String dataDriver, Strin
 //        sessionFactory = new Configuration().configure(modifyConnectConfiguration(dataBaseName, userName, password)).buildSessionFactory();
  
     }
-    
-    public void nombreMaquina (String nombreMaquina){
-    	try {
-
-    		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-    		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-
-    		// elemento raiz
-    		Document doc = docBuilder.newDocument();
-    		Element rootElement = doc.createElement("Fulltimepos");
-    		doc.appendChild(rootElement);
-
-    		// empleado
-    		Element empleado = doc.createElement("Caja");
-    		rootElement.appendChild(empleado);
-
-    		// atributo del elemento empleado
-    		Attr attr = doc.createAttribute("id");
-    		attr.setValue("1");
-    		empleado.setAttributeNode(attr);
-
-    		// nombre
-    		Element nombre = doc.createElement("nombre");
-    		nombre.appendChild(doc.createTextNode(nombreMaquina));
-    		empleado.appendChild(nombre);
-
-    		// escribimos el contenido en un archivo .xml
-    		TransformerFactory transformerFactory = TransformerFactory.newInstance();
-    		Transformer transformer = transformerFactory.newTransformer();
-    		DOMSource source = new DOMSource(doc);
-    		StreamResult result = new StreamResult(new File(System.getProperty("user.dir") +"\\src\\cajas.xml"));
-    		//StreamResult result = new StreamResult(new File("archivo.xml"));
-
-    		// Si se quiere mostrar por la consola...
-    		// StreamResult result = new StreamResult(System.out);
-
-    		transformer.transform(source, result);
-
-    		System.out.println("File saved!");
-
-    	} catch (ParserConfigurationException pce) {
-    		pce.printStackTrace();
-    	} catch (TransformerException tfe) {
-    		tfe.printStackTrace();
-    	}
-    }
 	
 }
