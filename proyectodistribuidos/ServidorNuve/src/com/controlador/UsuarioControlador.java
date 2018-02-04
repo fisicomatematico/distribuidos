@@ -7,6 +7,7 @@ import java.util.Date;
 
 import javax.swing.JPasswordField;
 
+import com.entidades.Archivos;
 import com.entidades.Usuarios;
 import com.servicios.UsuarioServicios;
 
@@ -17,11 +18,9 @@ public class UsuarioControlador {
 	public static String MINUSCULAS = "abcdefghijklmnopqrstuvwxyz";
 	
 	private static final char[] CONSTS_HEX = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' }; // cadena de carracteres para el cifrado de claves
-	private JPasswordField txtClave;
 	
 	private UsuarioServicios servicios;
 	private boolean actualizar = false;
-	private String mensajes;
 	
 	private Usuarios usuarios;
 
@@ -98,6 +97,17 @@ public class UsuarioControlador {
 		return tocken;
 	}
 	
+	public void crearDirectorio(String directorio) {
+		File folder = new File (directorio);
+		folder.mkdir();
+	}
+	
+	public Usuarios listaUsuarios () {
+		servicios = new UsuarioServicios();
+		Usuarios usua = servicios.busquedaUsuarios(encriptaEnMD5(usuarios.getTockenEscritorio()));
+		return usua;
+	}
+	
 	public static String encriptaEnMD5(String stringAEncriptar)
 	{
 		try
@@ -118,17 +128,5 @@ public class UsuarioControlador {
 		}
 	}
 	
-	public void crearDirectorio(String directorio) {
-		File folder = new File (directorio);
-		folder.mkdir();
-	}
 	
-	public String [] listaUsuarios () {
-		String listaDatos [] = new String[2];
-		servicios = new UsuarioServicios();
-		Usuarios usua = servicios.busquedaUsuarios(encriptaEnMD5(usuarios.getTockenEscritorio()));
-		listaDatos [0] = ""+usua.getUsuarioId();
-		listaDatos [1] = usua.getDirectorioPtha();
-		return listaDatos;
-	}
 }

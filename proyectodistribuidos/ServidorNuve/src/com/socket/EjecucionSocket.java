@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.controlador.ArchivoControlador;
 import com.controlador.UsuarioControlador;
+import com.entidades.Archivos;
 import com.entidades.Usuarios;
 
 public class EjecucionSocket extends Thread {
@@ -30,7 +32,10 @@ public class EjecucionSocket extends Thread {
 	private int identificador;
 	private String[] descomprimirDatos;
 	private Usuarios usuarios;
+	private Usuarios users;
+	private Archivos archivo;
 	private UsuarioControlador controlador = null;
+	private ArchivoControlador controlador2 = null;
 	private String archivos;
 	DataOutputStream output;
 	BufferedInputStream bis;
@@ -87,6 +92,7 @@ public class EjecucionSocket extends Thread {
 							bos.write(receivedData, 0, inData);
 						}
 						bos.close();
+						guardarActualizar();
 						directorioEn = "";
 						respuesta = "Archivo ingresado";
 					}else {
@@ -170,14 +176,31 @@ public class EjecucionSocket extends Thread {
 
 	public int tomarDirectorioEscritorio() {
 		int repuesta = 0;
-		String listaDatos [] = new String[2];
 		usuarios = new Usuarios();
 		usuarios.setTockenEscritorio(tockenEscritorio);
 		controlador = new UsuarioControlador(usuarios);
-		listaDatos = controlador.listaUsuarios();
-		repuesta = Integer.parseInt(listaDatos[0]);
-		directorioEn = listaDatos[1];
+		users = controlador.listaUsuarios();
+		repuesta = users.getUsuarioId();
+		directorioEn = users.getDirectorioPtha();
 		return repuesta;
+	}
+	
+	public String guardarActualizar () {
+		String respuesta = "";
+		archivo = new Archivos();
+		archivo.setUsuarios(users);
+		archivo.setUbicacion(directorioEn);
+		controlador2 = new ArchivoControlador(archivo);
+		int idArch = 0;
+		idArch = controlador2.buscarSiExiste();
+		if (idArch != 0) {
+			archivo.setArchivoId(idArch);
+			controlador2 = new ArchivoControlador(archivo);
+			respuesta = controlador2.actualizarArchivo();
+		}else {
+			respuesta = controlador2.guardarArchivo();
+		}
+		return respuesta;
 	}
 
 }

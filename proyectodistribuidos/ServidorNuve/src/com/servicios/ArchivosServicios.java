@@ -15,7 +15,7 @@ public class ArchivosServicios extends ArchivosDAO<Archivos>{
 		// TODO Auto-generated constructor stub
 	}
 
-	public String guardar(String codigo,Usuarios usuarios, String ubicacion, boolean actualizar) {
+	public String guardar(String codigo,Usuarios usuarios, String ubicacion, boolean actualizar, boolean eliminar) {
 		Archivos archivos = new Archivos();
 
 		if (actualizar) {
@@ -23,7 +23,14 @@ public class ArchivosServicios extends ArchivosDAO<Archivos>{
 			archivos.setUsuarios(usuarios);
 			archivos.setUbicacion(ubicacion);
 			super.actualizar(archivos);
-		} else {
+			resultado = "Datos actualizados";
+		}else if (eliminar) {
+			archivos = super.buscarId(Integer.parseInt(codigo));
+			archivos.setUsuarios(usuarios);
+			archivos.setUbicacion(ubicacion);
+			super.eliminar(archivos);
+			resultado = "Datos eliminados";
+		}else {
 			archivos.setUsuarios(usuarios);
 			archivos.setUbicacion(ubicacion);
 			super.guardar(archivos);
