@@ -1,6 +1,9 @@
 package com.controlador;
 
+import java.util.List;
+
 import com.entidades.Archivos;
+import com.entidades.Usuarios;
 import com.servicios.ArchivosServicios;
 
 public class ArchivoControlador {
@@ -10,6 +13,11 @@ public class ArchivoControlador {
 	
 	private boolean actualizar = false;
 	private boolean eliminar = false;
+
+	public ArchivoControlador() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public ArchivoControlador(Archivos archivos) {
 		super();
@@ -48,6 +56,22 @@ public class ArchivoControlador {
 		servicios = new ArchivosServicios();
 		respuesta = servicios.guardar(""+archivos.getArchivoId(), archivos.getUsuarios(), archivos.getUbicacion(), actualizar, eliminar);
 		return respuesta;
+	}
+	
+	public String [] archivoList (Usuarios usuarios){
+		servicios = new ArchivosServicios();
+		String listaArchivos [] = null;
+		int extension = 0;
+		int cont = 0;
+		List <Archivos> archList = servicios.busquedaListArchivos(usuarios);
+		extension = archList.size();
+		listaArchivos = new String [extension];
+		for (Archivos archivo : archList) {
+			listaArchivos [cont] = archivo.getUbicacion();
+			cont++;
+		}
+		return listaArchivos;
+		
 	}
 	
 }

@@ -23,6 +23,7 @@ public class UsuarioControlador {
 	private boolean actualizar = false;
 	
 	private Usuarios usuarios;
+	public Usuarios users = null;
 
 	public UsuarioControlador(Usuarios usuarios) {
 		super();
@@ -61,22 +62,29 @@ public class UsuarioControlador {
 	
 	public String atualizarDatos() {
 		actualizar = true;
+		String repuesta = "";
 		servicios = new UsuarioServicios();
+		Usuarios users = servicios.busquedaUsuariosMail(usuarios.getEmail());
+		if (users != null) {
 		Date fecha = new Date();
-		return servicios.guardar("0", usuarios.getNombres(), usuarios.getEmail(), fecha, "",
+		repuesta = servicios.guardar("0", usuarios.getNombres(), usuarios.getEmail(), fecha, "",
 				"", encriptaEnMD5(usuarios.getClave()), "",actualizar,1);
+		}else {
+			repuesta = "Datos no actualizados";
+		}
+		return repuesta;	
+		
 	}
 	
 	public String loginUsuarioEscritorio () {
 		String tocken = "";
-		int idLogin = 0;
 		Date fecha = new Date();
 		servicios = new UsuarioServicios();
-		idLogin = servicios.login(usuarios.getUsuario(), encriptaEnMD5(usuarios.getClave()));
-		if (idLogin != 0) {
+		users = servicios.login(usuarios.getUsuario(), encriptaEnMD5(usuarios.getClave()));
+		if (users != null) {
 			actualizar = true;
-			tocken = getPassword()+idLogin;
-			servicios.guardar(""+idLogin, "", "", fecha, "","", "", encriptaEnMD5(tocken), actualizar,2);
+			tocken = getPassword()+users.getUsuarioId();
+			servicios.guardar(""+users.getUsuarioId(), "", "", fecha, "","", "", encriptaEnMD5(tocken), actualizar,2);
 		}else {
 			tocken = "false";
 		}
@@ -85,12 +93,13 @@ public class UsuarioControlador {
 	
 	public String loginUsuarioAndroid () {
 		String tocken = "";
+		
 		Date fecha = new Date();
-		int idLogin = servicios.login(usuarios.getUsuario(), encriptaEnMD5(usuarios.getClave()));
-		if (idLogin != 0) {
+		users = servicios.login(usuarios.getUsuario(), encriptaEnMD5(usuarios.getClave()));
+		if (users != null) {
 			actualizar = true;
-			tocken = getPassword()+idLogin;
-			servicios.guardar(""+idLogin, "", "", fecha, "", "", "", encriptaEnMD5(tocken), actualizar,3);
+			tocken = getPassword()+users.getUsuarioId();
+			servicios.guardar(""+users.getUsuarioId(), "", "", fecha, "", "", "", encriptaEnMD5(tocken), actualizar,3);
 		}else {
 			tocken = "false";
 		}

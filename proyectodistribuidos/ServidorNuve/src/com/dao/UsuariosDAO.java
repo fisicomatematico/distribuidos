@@ -8,14 +8,15 @@ import org.hibernate.Session;
 
 public class UsuariosDAO<Usuarios> extends GenericoDAOImplementa<Usuarios> {
 
-	public int login(String usuario, String clave) {
-		Session query = this.abriSession();
+	@SuppressWarnings("unchecked")
+	public Usuarios login(String usuario, String clave) {
+		Session entityManager = this.abriSession();
 		try {
-			return Integer.parseInt(String.valueOf(query.createQuery(
-					"Select usuario.usuarioId from Usuarios usuario where usuario.usuario = :username and usuario.clave = :pass")
-					.setParameter("username", usuario).setParameter("pass", clave).getSingleResult()));
+			return (Usuarios) entityManager.createQuery(
+					"Select usuario from Usuarios usuario where usuario.usuario = :username and usuario.clave = :pass")
+					.setParameter("username", usuario).setParameter("pass", clave).getSingleResult();
 		} catch (NoResultException e) {
-			return -1;
+			return null;
 
 		}
 	}
@@ -39,6 +40,19 @@ public class UsuariosDAO<Usuarios> extends GenericoDAOImplementa<Usuarios> {
 			return (Usuarios) entityManager
 					.createQuery("Select usuario from Usuarios usuario where usuario.tockenEscritorio = :tocken")
 					.setParameter("tocken", tocken).getSingleResult();
+		} catch (NoResultException nre) {
+			return null; // envia un null en caso de no encontrar el usuario
+		}
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Usuarios busquedaUsuariosMail(String email) {
+		try {
+			Session entityManager = this.abriSession();
+			return (Usuarios) entityManager
+					.createQuery("Select usuario from Usuarios usuario where usuario.email = :email")
+					.setParameter("email", email).getSingleResult();
 		} catch (NoResultException nre) {
 			return null; // envia un null en caso de no encontrar el usuario
 		}

@@ -6,6 +6,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -37,11 +39,12 @@ public class EjecucionSocket extends Thread {
 	private UsuarioControlador controlador = null;
 	private ArchivoControlador controlador2 = null;
 	private String archivos;
-	DataOutputStream output;
-	BufferedInputStream bis;
-	BufferedOutputStream bos;
+	private DataOutputStream output;
+	private BufferedInputStream bis;
+	private BufferedOutputStream bos;
 	byte[] receivedData;
 	int inData;
+	private String [] listaArchivos;
 
 	public EjecucionSocket(int puerto) throws IOException {
 		// TODO Auto-generated constructor stub
@@ -79,7 +82,7 @@ public class EjecucionSocket extends Thread {
 					nombres = in.readUTF();
 					email = in.readUTF();
 					clave = in.readUTF();
-					respuesta = nuevoUsuario();
+					respuesta = actalizarUsuario();
 				} else if (identificador == 5) {
 					receivedData = new byte[1024];
 					bis = new BufferedInputStream(server.getInputStream());
@@ -111,6 +114,11 @@ public class EjecucionSocket extends Thread {
 				}
 				DataOutputStream out = new DataOutputStream(server.getOutputStream());
 				out.writeUTF(respuesta);
+				
+				if (identificador == 2 || identificador == 3) {
+					ObjectOutputStream oos = new ObjectOutputStream(server.getOutputStream());
+					oos.writeObject(listaArchivos);
+				}
 				in.close();
 				server.close();
 			} catch (IOException e) {
@@ -161,6 +169,8 @@ public class EjecucionSocket extends Thread {
 		usuarios.setClave(clave);
 		controlador = new UsuarioControlador(usuarios);
 		respuesta = controlador.loginUsuarioEscritorio();
+		controlador2 = new ArchivoControlador();
+		listaArchivos = controlador2.archivoList(controlador.users);
 		return respuesta;
 	}
 
@@ -171,6 +181,8 @@ public class EjecucionSocket extends Thread {
 		usuarios.setClave(clave);
 		controlador = new UsuarioControlador(usuarios);
 		respuesta = controlador.loginUsuarioAndroid();
+		controlador2 = new ArchivoControlador();
+		listaArchivos = controlador2.archivoList(controlador.users);
 		return respuesta;
 	}
 
