@@ -117,6 +117,12 @@ public class UsuarioControlador {
 		return usua;
 	}
 	
+	public Usuarios listaUsuariosA () {
+		servicios = new UsuarioServicios();
+		Usuarios usua = servicios.busquedaUsuariosA(encriptaEnMD5(usuarios.getTockenAndroid()));
+		return usua;
+	}
+	
 	public static String encriptaEnMD5(String stringAEncriptar)
 	{
 		try

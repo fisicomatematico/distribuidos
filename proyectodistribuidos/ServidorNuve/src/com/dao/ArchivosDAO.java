@@ -24,6 +24,20 @@ public class ArchivosDAO <Archivos> extends GenericoDAOImplementa<Archivos>{
 		}
 	}
 	
+	public int obtenerIdE(Usuarios usuarios, String nombreArchivo) {
+		Session query = this.abriSession();
+		try {
+			return Integer.parseInt(String.valueOf(query
+					.createQuery("Select archivos.archivoId from Archivos archivos where archivos.usuarios = :usuarios and archivos.nombreArchivos = :nombreArchivo")
+					.setParameter("usuarios", usuarios)
+					.setParameter("nombreArchivo", nombreArchivo)
+					.getSingleResult()));
+		} catch (NoResultException e) {
+			return 0;
+
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Archivos> busquedaListArchivos(Usuarios usuarios){
 		Session entityManager = this.abriSession();
@@ -32,6 +46,5 @@ public class ArchivosDAO <Archivos> extends GenericoDAOImplementa<Archivos>{
 				.getResultList();
 
 	}
-	
 	
 }

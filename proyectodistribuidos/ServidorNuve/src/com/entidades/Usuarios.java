@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "usuarios")
@@ -31,6 +33,7 @@ public class Usuarios implements Serializable {
 	private String email;
 
 	@Column(name = "fecha")
+	@Temporal(TemporalType.DATE)
 	private Date fecha;
 
 	@Column(name = "directorio_path")

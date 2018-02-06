@@ -1,5 +1,6 @@
 package com.controlador;
 
+import java.util.Date;
 import java.util.List;
 
 import com.entidades.Archivos;
@@ -31,12 +32,20 @@ public class ArchivoControlador {
 		return repuesta;
 	}
 	
+	public int buscarSiExisteE () {
+		int repuesta = 0;
+		servicios = new ArchivosServicios();
+		repuesta = servicios.obtenerIdE(archivos.getUsuarios(), archivos.getNombreArchivos());
+		return repuesta;
+	}
+	
 	public String guardarArchivo () {
 		String respuesta = "";
 		actualizar = false;
 		eliminar = false;
 		servicios = new ArchivosServicios();
-		respuesta = servicios.guardar(""+0, archivos.getUsuarios(), archivos.getUbicacion(), actualizar,eliminar);	
+		Date fecha = new Date();
+		respuesta = servicios.guardar(""+0, archivos.getUsuarios(), archivos.getUbicacion(), archivos.getNombreArchivos(), fecha, fecha, actualizar,eliminar);	
 		return respuesta;
 	}
 	
@@ -45,7 +54,8 @@ public class ArchivoControlador {
 		actualizar = true;
 		eliminar = false;
 		servicios = new ArchivosServicios();
-		respuesta = servicios.guardar(""+archivos.getArchivoId(), archivos.getUsuarios(), archivos.getUbicacion(), actualizar, eliminar);
+		Date fecha = new Date();
+		respuesta = servicios.guardar(""+archivos.getArchivoId(), archivos.getUsuarios(), archivos.getUbicacion(), archivos.getNombreArchivos(), fecha, fecha, actualizar, eliminar);
 		return respuesta;
 	}
 	
@@ -54,7 +64,16 @@ public class ArchivoControlador {
 		actualizar = false;
 		eliminar = true;
 		servicios = new ArchivosServicios();
-		respuesta = servicios.guardar(""+archivos.getArchivoId(), archivos.getUsuarios(), archivos.getUbicacion(), actualizar, eliminar);
+		Date fecha = new Date();
+		respuesta = servicios.guardar(""+archivos.getArchivoId(), archivos.getUsuarios(), archivos.getUbicacion(), archivos.getNombreArchivos(), fecha, fecha, actualizar, eliminar);
+		return respuesta;
+	}
+	
+	public String obtenerPath() {
+		String respuesta = "";
+		servicios = new ArchivosServicios();
+		Archivos pathArchivo = servicios.buscarId(archivos.getArchivoId());
+		respuesta = pathArchivo.getUbicacion();
 		return respuesta;
 	}
 	
@@ -67,11 +86,10 @@ public class ArchivoControlador {
 		extension = archList.size();
 		listaArchivos = new String [extension];
 		for (Archivos archivo : archList) {
-			listaArchivos [cont] = archivo.getUbicacion();
+			listaArchivos [cont] = archivo.getNombreArchivos();
 			cont++;
 		}
 		return listaArchivos;
 		
 	}
-	
 }

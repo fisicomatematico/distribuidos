@@ -47,6 +47,19 @@ public class UsuariosDAO<Usuarios> extends GenericoDAOImplementa<Usuarios> {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public Usuarios busquedaUsuariosA(String tocken) {
+		try {
+			Session entityManager = this.abriSession();
+			return (Usuarios) entityManager
+					.createQuery("Select usuario from Usuarios usuario where usuario.tockenAndroid = :tocken")
+					.setParameter("tocken", tocken).getSingleResult();
+		} catch (NoResultException nre) {
+			return null; // envia un null en caso de no encontrar el usuario
+		}
+
+	}
+	
+	@SuppressWarnings("unchecked")
 	public Usuarios busquedaUsuariosMail(String email) {
 		try {
 			Session entityManager = this.abriSession();
